@@ -10,8 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CollectionsRouteImport } from './routes/collections'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as InvoiceRouteImport } from './routes/invoice'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as OrderConfirmationRouteImport } from './routes/order-confirmation'
@@ -24,14 +30,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CategoriesRoute = CategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionsRoute = CollectionsRouteImport.update({
+  id: '/collections',
+  path: '/collections',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InvoiceRoute = InvoiceRouteImport.update({
@@ -67,8 +103,14 @@ const ProductIdRoute = ProductIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/cart': typeof CartRoute
+  '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/collections': typeof CollectionsRoute
+  '/contact': typeof ContactRoute
   '/invoice': typeof InvoiceRoute
   '/login': typeof LoginRoute
   '/order-confirmation': typeof OrderConfirmationRoute
@@ -78,8 +120,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/cart': typeof CartRoute
+  '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/collections': typeof CollectionsRoute
+  '/contact': typeof ContactRoute
   '/invoice': typeof InvoiceRoute
   '/login': typeof LoginRoute
   '/order-confirmation': typeof OrderConfirmationRoute
@@ -90,8 +138,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/cart': typeof CartRoute
+  '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/collections': typeof CollectionsRoute
+  '/contact': typeof ContactRoute
   '/invoice': typeof InvoiceRoute
   '/login': typeof LoginRoute
   '/order-confirmation': typeof OrderConfirmationRoute
@@ -103,8 +157,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/account'
+    | '/admin'
     | '/cart'
+    | '/categories'
     | '/checkout'
+    | '/collections'
+    | '/contact'
     | '/invoice'
     | '/login'
     | '/order-confirmation'
@@ -114,8 +174,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/account'
+    | '/admin'
     | '/cart'
+    | '/categories'
     | '/checkout'
+    | '/collections'
+    | '/contact'
     | '/invoice'
     | '/login'
     | '/order-confirmation'
@@ -125,8 +191,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/account'
+    | '/admin'
     | '/cart'
+    | '/categories'
     | '/checkout'
+    | '/collections'
+    | '/contact'
     | '/invoice'
     | '/login'
     | '/order-confirmation'
@@ -137,8 +209,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRoute
   CartRoute: typeof CartRoute
+  CategoriesRoute: typeof CategoriesRoute
   CheckoutRoute: typeof CheckoutRoute
+  CollectionsRoute: typeof CollectionsRoute
+  ContactRoute: typeof ContactRoute
   InvoiceRoute: typeof InvoiceRoute
   LoginRoute: typeof LoginRoute
   OrderConfirmationRoute: typeof OrderConfirmationRoute
@@ -156,6 +234,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
@@ -163,11 +262,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collections': {
+      id: '/collections'
+      path: '/collections'
+      fullPath: '/collections'
+      preLoaderRoute: typeof CollectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/invoice': {
@@ -217,8 +337,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AccountRoute: AccountRoute,
+  AdminRoute: AdminRoute,
   CartRoute: CartRoute,
+  CategoriesRoute: CategoriesRoute,
   CheckoutRoute: CheckoutRoute,
+  CollectionsRoute: CollectionsRoute,
+  ContactRoute: ContactRoute,
   InvoiceRoute: InvoiceRoute,
   LoginRoute: LoginRoute,
   OrderConfirmationRoute: OrderConfirmationRoute,
