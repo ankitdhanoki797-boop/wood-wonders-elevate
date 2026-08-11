@@ -69,9 +69,11 @@ export function ShopProvider({ children }: { children: ReactNode }) {
           );
           if (i >= 0) {
             const next = [...c];
-            next[i] = { ...next[i], qty: next[i].qty + line.qty };
+            const existing = next[i]!;
+            next[i] = { ...existing, qty: existing.qty + line.qty };
             return next;
           }
+
           return [...c, line];
         }),
       remove: (index) => setCart((c) => c.filter((_, i) => i !== index)),
