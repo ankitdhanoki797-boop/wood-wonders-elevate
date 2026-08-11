@@ -4,12 +4,13 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { categories, products, type Product } from "@/lib/shop-data";
 import { ProductCard } from "@/components/site/ProductCard";
 
-type Search = { category?: string };
+type Search = { category?: string | undefined };
 
 export const Route = createFileRoute("/shop")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    category: typeof s.category === "string" ? s.category : undefined,
+    category: typeof s["category"] === "string" ? (s["category"] as string) : undefined,
   }),
+
   head: () => ({
     meta: [
       { title: "Shop All Furniture — Wood & Wonders" },
