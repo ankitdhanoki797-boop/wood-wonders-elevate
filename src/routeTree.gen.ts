@@ -21,6 +21,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as InvoiceRouteImport } from './routes/invoice'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as OrderConfirmationRouteImport } from './routes/order-confirmation'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as TrackOrderRouteImport } from './routes/track-order'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
@@ -85,6 +86,11 @@ const OrderConfirmationRoute = OrderConfirmationRouteImport.update({
   path: '/order-confirmation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/invoice': typeof InvoiceRoute
   '/login': typeof LoginRoute
   '/order-confirmation': typeof OrderConfirmationRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/track-order': typeof TrackOrderRoute
   '/product/$id': typeof ProductIdRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/invoice': typeof InvoiceRoute
   '/login': typeof LoginRoute
   '/order-confirmation': typeof OrderConfirmationRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/track-order': typeof TrackOrderRoute
   '/product/$id': typeof ProductIdRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/invoice': typeof InvoiceRoute
   '/login': typeof LoginRoute
   '/order-confirmation': typeof OrderConfirmationRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/track-order': typeof TrackOrderRoute
   '/product/$id': typeof ProductIdRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/invoice'
     | '/login'
     | '/order-confirmation'
+    | '/reset-password'
     | '/shop'
     | '/track-order'
     | '/product/$id'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/invoice'
     | '/login'
     | '/order-confirmation'
+    | '/reset-password'
     | '/shop'
     | '/track-order'
     | '/product/$id'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/invoice'
     | '/login'
     | '/order-confirmation'
+    | '/reset-password'
     | '/shop'
     | '/track-order'
     | '/product/$id'
@@ -220,6 +232,7 @@ export interface RootRouteChildren {
   InvoiceRoute: typeof InvoiceRoute
   LoginRoute: typeof LoginRoute
   OrderConfirmationRoute: typeof OrderConfirmationRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ShopRoute: typeof ShopRoute
   TrackOrderRoute: typeof TrackOrderRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrderConfirmationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -348,6 +368,7 @@ const rootRouteChildren: RootRouteChildren = {
   InvoiceRoute: InvoiceRoute,
   LoginRoute: LoginRoute,
   OrderConfirmationRoute: OrderConfirmationRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ShopRoute: ShopRoute,
   TrackOrderRoute: TrackOrderRoute,
   ProductIdRoute: ProductIdRoute,
