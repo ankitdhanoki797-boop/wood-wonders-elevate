@@ -1,24 +1,27 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Heart, Menu, Search, ShoppingBag, User, X, Home, LayoutGrid } from "lucide-react";
 import { useState } from "react";
 import { useShop } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import { categories } from "@/lib/shop-data";
 
 const mainNav = [
   { label: "Home", to: "/" },
-  { label: "Shop", to: "/shop" },
   { label: "Categories", to: "/categories" },
-  { label: "Collections", to: "/collections" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" },
 ] as const;
 
 export function Header() {
   const { cart, wishlist } = useShop();
+  const { session, profile, isAdmin, isJrAdmin, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState(false);
+  const [menu, setMenu] = useState(false);
   const count = cart.reduce((s, l) => s + l.qty, 0);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
