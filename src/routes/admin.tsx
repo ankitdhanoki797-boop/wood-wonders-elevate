@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { useAuth, PERMISSIONS, type PermissionId } from "@/lib/auth";
+import { listManagedUsers, setUserRole, setUserPermissions, type ManagedUser } from "@/lib/admin.functions";
 import {
   LayoutDashboard,
   Boxes,
@@ -11,6 +15,7 @@ import {
   Image as ImageIcon,
   Settings,
   ArrowLeft,
+  ShieldCheck,
 } from "lucide-react";
 import { inr, products } from "@/lib/shop-data";
 
@@ -26,17 +31,18 @@ export const Route = createFileRoute("/admin")({
   component: Admin,
 });
 
-const nav = [
+const nav: { id: string; icon: typeof Boxes; perm?: PermissionId; adminOnly?: boolean }[] = [
   { id: "Dashboard", icon: LayoutDashboard },
-  { id: "Products", icon: Boxes },
-  { id: "Categories", icon: Tags },
-  { id: "Orders", icon: ShoppingCart },
-  { id: "Customers", icon: Users },
+  { id: "Products", icon: Boxes, perm: "products" },
+  { id: "Categories", icon: Tags, perm: "categories" },
+  { id: "Orders", icon: ShoppingCart, perm: "orders" },
+  { id: "Customers", icon: Users, perm: "customers" },
   { id: "Coupons", icon: Ticket },
   { id: "Reviews", icon: Star },
-  { id: "Banners", icon: ImageIcon },
-  { id: "Settings", icon: Settings },
-] as const;
+  { id: "Banners", icon: ImageIcon, perm: "banners" },
+  { id: "Settings", icon: Settings, perm: "settings" },
+  { id: "Access", icon: ShieldCheck, adminOnly: true },
+];
 
 const recentOrders = [
   { id: "WW1025", customer: "Ananya Sharma", city: "Bengaluru", total: 64899, status: "Out for Delivery" },
@@ -47,7 +53,26 @@ const recentOrders = [
 ];
 
 function Admin() {
+  const { loading, session, isAdmin, isJrAdmin, can } = useAuth();
   const [tab, setTab] = useState<string>("Dashboard");
+  if (loading) return <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">Loading…</div>;
+  if (!session || !(isAdmin || isJrAdmin)) {
+    return (
+      <div className="grid min-h-screen place-items-center px-4">
+        <div className="max-w-sm text-center">
+          <h1 className="text-2xl">Admin access only</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {session ? "Your account doesn't have admin access." : "Please log in with an admin account."}
+          </p>
+          <div className="mt-6 flex justify-center gap-2">
+            {!session && <Link to="/login" className="btn-primary">Log in</Link>}
+            <Link to="/" className="btn-outline">Back to store</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  const visible = nav.filter((n) => (n.adminOnly ? isAdmin : !n.perm || can(n.perm)));
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -55,7 +80,7 @@ function Admin() {
         <p className="px-2 font-display text-lg">Wood &amp; Wonders</p>
         <p className="mb-6 px-2 text-[0.65rem] uppercase tracking-[0.2em] opacity-60">Admin</p>
         <nav className="grid gap-1 text-sm">
-          {nav.map((n) => (
+          {visible.map((n) => (
             <button
               key={n.id}
               onClick={() => setTab(n.id)}
@@ -85,7 +110,7 @@ function Admin() {
 
         <div className="p-6">
           <div className="mb-6 flex gap-2 overflow-x-auto lg:hidden">
-            {nav.map((n) => (
+            {visible.map((n) => (
               <button
                 key={n.id}
                 onClick={() => setTab(n.id)}
@@ -98,7 +123,9 @@ function Admin() {
             ))}
           </div>
 
-          {tab === "Products" ? (
+          {tab === "Access" && isAdmin ? (
+            <AccessManager />
+          ) : tab === "Products" ? (
             <ProductManager />
           ) : tab === "Orders" ? (
             <OrdersTable />
@@ -247,5 +274,75 @@ function F({ label, placeholder }: { label: string; placeholder: string }) {
         className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-accent"
       />
     </label>
+  );
+}
+
+function AccessManager() {
+  const list = useServerFn(listManagedUsers);
+  const saveRole = useServerFn(setUserRole);
+  const savePerms = useServerFn(setUserPermissions);
+  const [users, setUsers] = useState<ManagedUser[] | null>(null);
+  const load = () => list().then(setUsers).catch((e) => toast.error(e.message));
+  useEffect(() => { void load(); }, []);
+
+  if (!users) return <p className="text-sm text-muted-foreground">Loading users…</p>;
+  return (
+    <div className="surface-card overflow-x-auto p-6">
+      <h2 className="text-lg">Staff access</h2>
+      <p className="mt-1 text-xs text-muted-foreground">Make a user a junior admin, then tick what they can manage.</p>
+      <div className="mt-4 grid gap-4">
+        {users.map((u) => {
+          const role = u.roles.includes("admin") ? "admin" : u.roles.includes("jr_admin") ? "jr_admin" : "customer";
+          return (
+            <div key={u.id} className="rounded-md border border-border p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-semibold">{u.full_name || u.email}</p>
+                  <p className="truncate text-xs text-muted-foreground">{u.email}</p>
+                </div>
+                {role === "admin" ? (
+                  <span className="rounded-full bg-secondary px-3 py-1 text-xs">Admin</span>
+                ) : (
+                  <select
+                    value={role}
+                    onChange={async (e) => {
+                      try {
+                        await saveRole({ data: { userId: u.id, role: e.target.value as "jr_admin" | "customer" } });
+                        toast.success("Role updated");
+                        load();
+                      } catch (err) { toast.error((err as Error).message); }
+                    }}
+                    className="rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+                  >
+                    <option value="customer">Customer</option>
+                    <option value="jr_admin">Junior admin</option>
+                  </select>
+                )}
+              </div>
+              {role === "jr_admin" && (
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {PERMISSIONS.map((p) => (
+                    <label key={p.id} className="flex items-center gap-2 text-xs">
+                      <input
+                        type="checkbox"
+                        checked={u.permissions.includes(p.id)}
+                        onChange={async (e) => {
+                          const next = e.target.checked ? [...u.permissions, p.id] : u.permissions.filter((x) => x !== p.id);
+                          try {
+                            await savePerms({ data: { userId: u.id, permissions: next } });
+                            setUsers((all) => all!.map((x) => (x.id === u.id ? { ...x, permissions: next } : x)));
+                          } catch (err) { toast.error((err as Error).message); }
+                        }}
+                      />
+                      {p.label}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
