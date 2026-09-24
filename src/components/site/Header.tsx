@@ -70,9 +70,61 @@ export function Header() {
             <Heart size={19} />
             {wishlist.length > 0 && <Dot n={wishlist.length} />}
           </Link>
-          <Link to="/login" aria-label="Account">
-            <User size={19} />
-          </Link>
+          {session ? (
+            <div className="relative">
+              <button
+                type="button"
+                aria-label="Profile"
+                onClick={() => setMenu((m) => !m)}
+                className="grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-secondary text-xs font-semibold"
+              >
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  (profile?.full_name || session.user.email || "U").charAt(0).toUpperCase()
+                )}
+              </button>
+              {menu && (
+                <div className="absolute right-0 top-10 z-50 w-56 rounded-md border border-border bg-card p-2 text-sm shadow-lg">
+                  <p className="truncate px-2 py-1.5 font-semibold">{profile?.full_name || "My account"}</p>
+                  <p className="truncate px-2 pb-2 text-xs text-muted-foreground">{session.user.email}</p>
+                  <Link to="/account" onClick={() => setMenu(false)} className="block rounded px-2 py-2 hover:bg-secondary">
+                    Account
+                  </Link>
+                  {(isAdmin || isJrAdmin) && (
+                    <Link to="/admin" onClick={() => setMenu(false)} className="block rounded px-2 py-2 hover:bg-secondary">
+                      Admin panel
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setMenu(false);
+                      await signOut();
+                      navigate({ to: "/login", replace: true });
+                    }}
+                    className="block w-full rounded px-2 py-2 text-left hover:bg-secondary"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="hidden items-center gap-2 sm:flex">
+              <Link to="/login" className="text-sm hover:text-accent">
+                Log in
+              </Link>
+              <Link to="/login" search={{ mode: "signup" } as never} className="btn-primary py-1.5 text-xs">
+                Sign up
+              </Link>
+            </div>
+          )}
+          {!session && (
+            <Link to="/login" aria-label="Log in" className="sm:hidden">
+              <User size={19} />
+            </Link>
+          )}
           <Link to="/cart" aria-label="Cart" className="relative">
             <ShoppingBag size={19} />
             {count > 0 && <Dot n={count} />}
