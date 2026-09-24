@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useShop } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { categories } from "@/lib/shop-data";
+import logoAsset from "@/assets/wood-wonders-logo.jpg.asset.json";
 
 const mainNav = [
   { label: "Home", to: "/" },
@@ -40,9 +41,11 @@ export function Header() {
         </button>
 
         <Link to="/" className="flex min-w-0 items-center gap-2">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary font-display text-sm text-primary-foreground">
-            W
-          </span>
+          <img
+            src={logoAsset.url}
+            alt="Wood & Wonders logo"
+            className="h-10 w-10 shrink-0 rounded-full object-cover"
+          />
           <span className="truncate font-display text-xl leading-none">
             Wood <span className="text-accent">&</span> Wonders
           </span>
