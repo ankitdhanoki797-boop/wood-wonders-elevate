@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useShop } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { categories } from "@/lib/shop-data";
+import logoAsset from "@/assets/wood-wonders-logo.jpg.asset.json";
 
 const mainNav = [
   { label: "Home", to: "/" },
