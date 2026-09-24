@@ -13,6 +13,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ShopProvider } from "../lib/store";
+import { AuthProvider } from "../lib/auth";
+import { Toaster } from "../components/ui/sonner";
 import { Header, MobileTabBar } from "../components/site/Header";
 import { Footer } from "../components/site/Footer";
 
@@ -122,6 +124,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AuthProvider>
       <ShopProvider>
         {isAdmin ? (
           <Outlet />
@@ -136,6 +139,8 @@ function RootComponent() {
           </div>
         )}
       </ShopProvider>
+      <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

@@ -115,7 +115,7 @@ export function Header() {
               <Link to="/login" className="text-sm hover:text-accent">
                 Log in
               </Link>
-              <Link to="/login" search={{ mode: "signup" } as never} className="btn-primary py-1.5 text-xs">
+              <Link to="/login" className="btn-primary py-1.5 text-xs">
                 Sign up
               </Link>
             </div>
